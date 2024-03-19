@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -11,7 +12,7 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     use HasApiTokens;
-    use HasFactory; 
+    use HasFactory;
     use Notifiable;
 
     /**
@@ -45,26 +46,21 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-
-
-    
     public function getImage()
     {
-       return asset('storage/'.$this->profile);
+        return asset('storage/'.$this->profile);
     }
 
-
-    /** 
-     * Get all of the writing for the User 
-     * 
-     * @return /Illuminate/Database/Relations/HasMany
+    /**
+     * Get all of the writings for the User.
      */
-    public function writings():HasMany
+    public function writings(): HasMany
     {
-        return $this->hasMany(writing::class);
+        return $this->hasMany(Writing::class);
     }
 
-
-    
-    
+    public function getLink()
+    {
+        return route('authors.show', ['author' => $this->id]);
+    }
 }
